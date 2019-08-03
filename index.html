@@ -1,6 +1,48 @@
 <html>
     <head>
         <style>
+            body {
+      font-family: verdana;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h2 {
+      text-transform: uppercase;
+    }
+    button{
+      height: 3rem;
+      background-color: tomato;
+    }
+    button[disabled]{
+      background-color: white;
+    }
+    #lists {
+      display: flex;
+      width: 100%;
+    }
+    #first,#second,#third {
+      width: calc(100%/3 - 2rem);
+      margin: 2rem;
+      border: solid 1px tomato;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+    }
+    .selected {
+      background-color: tomato;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      padding: 1rem;
+      border-bottom: solid 1px white;
+      cursor: pointer;
+    }
+    
         </style>
     </head>
     <body>
@@ -11,6 +53,53 @@
         <div id="third"></div>
         </div>
         <script>
+
+            const slots = ['first','second','third'];
+            const firstA = [];
+            const secondA =[];
+            const thrirdA = [];
+            const firstSlot=document.querySelector('#first');
+            const secondSlot=document.querySelector('#second');
+            const thirdSlot=document.querySelector('#third')
+            const users = [
+            { id: 1, name: 'moe',slot:'first'},
+            { id: 2, name: 'larry',slot:'second'},
+            { id: 3, name: 'curly',slot:'third'},
+            { id: 4, name: 'lucy',slot:'third'}
+            ];
+            slotUsers();
+            function slotUsers(){
+                users.forEach(user =>{
+                switch(user.slot)  {
+                    case 'first':
+                        firstA.push(user);
+                        break;
+                    case 'second':
+                        secondA.push(user);
+                        break;
+                    case 'third':
+                        thrirdA.push(user)
+                        break;
+                }
+            });
+            //console.log(firstA);
+            // console.log(secondA);
+            // console.log(thrirdA);
+            };
+            function buildSlots(arr){
+                //console.log('This is the parm arr', arr);
+                let htmlLi=''
+                let html=''
+                htmlLi = arr.map(arrEl =>{return `<li data-id="1">${arrEl.name}</li>`}).join('');
+                //console.log(htmlLi)
+                return html="<ul>"+htmlLi+"</ul>"
+            }
+            const render = ()=>{
+                firstSlot.innerHTML=buildSlots(firstA);
+                secondSlot.innerHTML=buildSlots(secondA);
+                thirdSlot.innerHTML=buildSlots(thrirdA);
+            }
+            render();
         </script>
     </body>
 </html>
