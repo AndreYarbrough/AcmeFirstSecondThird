@@ -55,49 +55,118 @@
         <script>
 
             const slots = ['first','second','third'];
-            const firstA = [];
-            const secondA =[];
-            const thrirdA = [];
+            let firstA = [];
+            let secondA =[];
+            let thrirdA = [];
             const firstSlot=document.querySelector('#first');
             const secondSlot=document.querySelector('#second');
             const thirdSlot=document.querySelector('#third')
+            const main=document.querySelector('#lists');
             const users = [
-            { id: 1, name: 'moe',slot:'first'},
-            { id: 2, name: 'larry',slot:'second'},
-            { id: 3, name: 'curly',slot:'third'},
-            { id: 4, name: 'lucy',slot:'third'}
+            { id: 1, name: 'moe',slot:'first',selected:false},
+            { id: 2, name: 'larry',slot:'second',selected:false},
+            { id: 3, name: 'curly',slot:'third',selected:false},
+            { id: 4, name: 'lucy',slot:'third',selected:true}
             ];
             slotUsers();
             function slotUsers(){
                 users.forEach(user =>{
                 switch(user.slot)  {
                     case 'first':
-                        firstA.push(user);
+                        
+                        if(!firstA.includes(user)){firstA.push(user);}
                         break;
                     case 'second':
-                        secondA.push(user);
+                        
+                        if(!secondA.includes(user)){secondA.push(user);}
                         break;
                     case 'third':
-                        thrirdA.push(user)
+                        
+                        if(!thrirdA.includes(user)){thrirdA.push(user);}
                         break;
                 }
             });
             //console.log(firstA);
             // console.log(secondA);
-            // console.log(thrirdA);
+             //console.log(thrirdA);
+            main.addEventListener('click',ev =>{
+                const eTarget = ev.target;
+                let parnt = eTarget.parentNode;
+                let meChild = parnt.querySelector('li');
+                let liArray = Object.values([...parnt.querySelectorAll('li')])
+                let reload=false
+                const aTag=parnt.querySelector('id')
+                //console.log(eTarget);
+                //console.log(eTarget.tagName);
+                //console.log("parent is: ",parnt)
+                //console.log("meChild is: ",meChild)
+                if(eTarget.tagName==='BUTTON'){
+                    const id = eTarget.getAttribute('id');
+                    const manna=parnt.querySelector('ul').innerHTML
+                    if(!manna.toString().includes("selected")){
+                        alert('You must first select a user')
+                    }else{ 
+                    reload=true;
+                    const direction = eTarget.getAttribute('data-id');
+                    users.forEach(user =>{
+                        if(direction==="dCres" && user.selected){
+                            user.selected=false;
+                            switch(user.slot)  {
+                    case 'first':
+                        
+                        break;
+                    case 'second':
+                        
+                        user.slot='first';
+                        break;
+                    case 'third':
+                        
+                    user.slot='second';
+                        break;
+                }
+                        }else if(direction==="nCres" && user.selected){
+
+                        }
+                    })
+                    
+                    }
+                   
+                    if(reload){
+                        firstA = [];
+                        secondA =[];
+                        thrirdA = [];
+                        //console.table(users) ;  
+                        slotUsers();
+                        render();
+                    }
+                }
+                if(eTarget.tagName === 'LI'){
+                    const id = eTarget.getAttribute('data-id')*1;
+                    console.log("data-id is:",id);
+                    const user = users.find( user => user.id === id); 
+                    user.selected = !user.selected;
+                    //console.table(users) ;
+                    render();
+                    //meChild=`<li data-id="${user.id}"}"class="${user.selected}">${user.name}</li>`
+                    //console.log("meChild is after click: ",meChild);
+                    
+                    //parnt.innerHTML=meChild;
+                }
+            });
             };
-            function buildSlots(arr){
+            function buildSlots(arr, id,pH2,b1Stat, b2Stat){
                 //console.log('This is the parm arr', arr);
                 let htmlLi=''
                 let html=''
-                htmlLi = arr.map(arrEl =>{return `<li data-id="1">${arrEl.name}</li>`}).join('');
+                htmlLi = arr.map(arrEl =>{return `<li data-id="${arrEl.id}"} class="${arrEl.selected ? 'selected':''}">${arrEl.name}</li>`}).join('');
                 //console.log(htmlLi)
-                return html="<ul>"+htmlLi+"</ul>"
+                return html=`<button ${b1Stat} id="${id}" data-id="dCres"> < </button><button ${b2Stat} id="${id}>"data-id"nCres"> > </button><h2>${pH2}</h2><ul>`+htmlLi+"</ul>"
+                //return html="<button disabled> < </button><button> > </button><ul>"+htmlLi+"</ul>"
             }
             const render = ()=>{
-                firstSlot.innerHTML=buildSlots(firstA);
-                secondSlot.innerHTML=buildSlots(secondA);
-                thirdSlot.innerHTML=buildSlots(thrirdA);
+                firstSlot.innerHTML=buildSlots(users,1,'first','disabled','');
+                secondSlot.innerHTML=buildSlots(secondA,2,'second');
+                thirdSlot.innerHTML=buildSlots(thrirdA,3,'third','','disabled');
             }
             render();
         </script>
